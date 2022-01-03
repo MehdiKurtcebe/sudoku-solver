@@ -2,7 +2,7 @@ public class Sudoku {
 
 	private final int GRID_SIZE = 9;
 
-	private final int[][] board;
+	private int[][] board;
 
 	public Sudoku(int[][] board) {
 		this.board = board;
@@ -12,6 +12,22 @@ public class Sudoku {
 		return board;
 	}
 
+	// Returns false if given board is in invalid format and does not set.
+	// Otherwise, returns true and sets the value.
+	public boolean setBoard(int[][] board) {
+		if (board.length != GRID_SIZE) return false;
+		for (int row = 0; row < GRID_SIZE; row++) {
+			if (board[row].length != GRID_SIZE) return false;
+			for (int col = 0; col < GRID_SIZE; col++) {
+				if (board[row][col] < 0 || board[row][col] > GRID_SIZE) return false;
+			}
+		}
+		this.board = board;
+		return true;
+	}
+
+	// Solves the board and returns true.
+	// Returns false if the board is not solvable.
 	public boolean solve() {
 		for (int row = 0; row < GRID_SIZE; row++) {
 			for (int col = 0; col < GRID_SIZE; col++) {
@@ -30,27 +46,23 @@ public class Sudoku {
 		return true;
 	}
 
-	@Override
-	public String toString() {
-		StringBuilder s = new StringBuilder();
-		for (int row = 0; row < GRID_SIZE; row++) {
-			if (row % 3 == 0)
-				s.append("------------------------\n");
-			for (int col = 0; col < GRID_SIZE; col++) {
-				if (col % 3 == 0)
-					s.append("| ");
-				s.append(board[row][col] != 0 ? board[row][col] : " ").append(" ");
-			}
-			s.append('\n');
+	// Sets the given point to given point and returns true.
+	// Returns false if given parameters are invalid and does not set the number.
+	public boolean setPoint(int number, int row, int col) {
+		if (isValidPoint(row) && isValidPoint(col) && (isValidNumber(number) || number == 0)) {
+			board[row][col] = number;
+			return true;
 		}
-		return s.toString();
+		return false;
 	}
 
-	private boolean isValidPlacement(int number, int row, int col) {
+	// Returns true if it is valid to put given number to given point, false otherwise.
+	public boolean isValidPlacement(int number, int row, int col) {
 		return !isInRow(number, row) && !isInCol(number, col) && !isInBox(number, row, col);
 	}
 
-	private boolean isInRow(int number, int row) {
+	// Returns true if given number exists in given row, false otherwise.
+	public boolean isInRow(int number, int row) {
 		if (!isValidPoint(row) || !isValidNumber(number))
 			return false;
 		for (int i = 0; i < GRID_SIZE; i++) {
@@ -59,7 +71,8 @@ public class Sudoku {
 		return false;
 	}
 
-	private boolean isInCol(int number, int col) {
+	// Returns true if given number exists in given column, false otherwise.
+	public boolean isInCol(int number, int col) {
 		if (!isValidPoint(col) || !isValidNumber(number))
 			return false;
 		for (int i = 0; i < GRID_SIZE; i++) {
@@ -68,7 +81,8 @@ public class Sudoku {
 		return false;
 	}
 
-	private boolean isInBox(int number, int row, int col) {
+	// Returns true if given number exists in the box that given point belongs, false otherwise.
+	public boolean isInBox(int number, int row, int col) {
 		if (!isValidNumber(number) || !isValidPoint(row) || !isValidPoint(col))
 			return false;
 
@@ -88,5 +102,21 @@ public class Sudoku {
 
 	private boolean isValidNumber(int number) {
 		return number > 0 && number <= GRID_SIZE;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder s = new StringBuilder();
+		for (int row = 0; row < GRID_SIZE; row++) {
+			if (row % 3 == 0)
+				s.append("------------------------\n");
+			for (int col = 0; col < GRID_SIZE; col++) {
+				if (col % 3 == 0)
+					s.append("| ");
+				s.append(board[row][col] != 0 ? board[row][col] : " ").append(" ");
+			}
+			s.append('\n');
+		}
+		return s.toString();
 	}
 }
