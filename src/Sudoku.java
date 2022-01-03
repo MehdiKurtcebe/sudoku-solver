@@ -109,14 +109,15 @@ public class Sudoku {
 		StringBuilder s = new StringBuilder();
 		for (int row = 0; row < GRID_SIZE; row++) {
 			if (row % 3 == 0)
-				s.append("------------------------\n");
+				s.append("-------------------------\n");
 			for (int col = 0; col < GRID_SIZE; col++) {
 				if (col % 3 == 0)
 					s.append("| ");
 				s.append(board[row][col] != 0 ? board[row][col] : " ").append(" ");
 			}
-			s.append('\n');
+			s.append("|\n");
 		}
+		s.append("-------------------------\n");
 		return s.toString();
 	}
 }
